@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class FieldController {
 
 	@PostMapping("/field-conditions")
-	public ResponseEntity<?> singleConditions() {
-		return new ResponseEntity<>(HttpStatus.OK);
+	public ResponseEntity<?> record() {
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 }
