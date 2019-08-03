@@ -1,6 +1,7 @@
 package com.application;
 
 import com.field.controller.FieldController;
+import io.restassured.mapper.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class StreamingStatisticsApplicationTest {
 
-	private final static String FIELD_DATA =
+	private final static String RESOLVED_FIELD_DATA =
 			"{"
 					+ "	\"vegetation\" : {"
 			+ "\"min\" : \"0.01\","
@@ -31,8 +32,20 @@ public class StreamingStatisticsApplicationTest {
 			+ "    }"
 			+ "}";
 
+	private final static String FIELD_DATA =
+			"{"
+					+ "	\"vegetation\" : \"0.82\","
+			       + "	\"occurrenceAt\" : \"2019-04-23T08:50Z\""
+				+ "}";
+
+	private final static String INVALID_FIELD_DATA =
+			"{"
+					+ "	\"vegetation\" : \"-1\","
+					+ "	\"occurrenceAt\" : \"2019-04-23T08:50Z\""
+					+ "}";
 	@Autowired
 	   private MockMvc mvc;
+
 
 	@Before
 	public void setup() {
@@ -40,7 +53,7 @@ public class StreamingStatisticsApplicationTest {
 	}
 	   @Test
 	    public void shouldReturnEmpty() throws Exception {
-	        this.mvc.perform(post("/field-conditions")).andDo(print()).andExpect(status().isCreated())
+	        this.mvc.perform(post("/field-conditions")).andDo(print()).andExpect(status().isBadRequest())
 	        .andExpect(jsonPath("$").doesNotExist());
 	    }
 
@@ -52,4 +65,22 @@ public class StreamingStatisticsApplicationTest {
 						.content(FIELD_DATA))
 				.andExpect(status().isCreated());
 	}
+
+	@Test
+	public void shouldNotRecord() throws Exception {
+		mvc.perform(
+				MockMvcRequestBuilders.post("/field-conditions")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(INVALID_FIELD_DATA))
+				.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	public void shouldSummarize() throws Exception {
+		mvc.perform(
+				MockMvcRequestBuilders.get("/field-statistics"))
+				.andExpect(status().isOk());
+	}
+
+
 }
