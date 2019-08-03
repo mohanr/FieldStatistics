@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.application.StreamingStatisticsApplicationTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.093 s - in com.application.StreamingStatisticsApplicationTest

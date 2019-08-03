@@ -1,0 +1,4 @@
+com\statistics\Telemetry.class
+com\application\StreamingStatisticsApplication.class
+com\field\controller\FieldController.class
+com\statistics\FieldStatistics.class

@@ -1,21 +1,17 @@
 package com.statistics;
 
-import java.util.concurrent.TimeUnit;
-
 import org.HdrHistogram.Histogram;
 
 public class FieldStatistics {
 
-	private static final Histogram HDR_HISTOGRAM =
-		    new Histogram(TimeUnit.MINUTES.toNanos(1), 2);
+
+	static Histogram histogram = new Histogram(10, 3);
 		  
-		  private static void observe(int i, long time) {
-		    HDR_HISTOGRAM.recordValue(time);
+		  private static void record( long value ) {
+			  histogram.recordValue(value);
 		  }
-		  private static void report() {
-		    System.out.printf("#%d,%d,%d,%d,%d,%d,%d\n",
-		                      HDR_HISTOGRAM.getMinValue(), 
-		                      HDR_HISTOGRAM.getMaxValue());
-		    HDR_HISTOGRAM.reset();
+
+		  private double[]  getValues() {
+		    return new double[] {histogram.getMinValue(), histogram.getMaxValue(), histogram.getMean() };
 		  }
 }
