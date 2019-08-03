@@ -23,5 +23,11 @@ public class TelemetrySummary {
     public double getMean() {
         return mean;
     }
+
+    public String toString(){
+        StringBuffer sb = new StringBuffer();
+        sb.append( "Max. " + max).append( " Min. " + min ).append( " Mean " + mean );
+        return sb.toString();
+    }
 }
 

@@ -1,10 +1,11 @@
 package com.application;
 
 import com.field.controller.FieldController;
-import io.restassured.mapper.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -22,6 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class StreamingStatisticsApplicationTest {
+
+	Logger logger = LoggerFactory.getLogger("com.statistics");
 
 	private final static String RESOLVED_FIELD_DATA =
 			"{"
@@ -59,6 +65,7 @@ public class StreamingStatisticsApplicationTest {
 
 	@Test
 	public void shouldRecord() throws Exception {
+
 		mvc.perform(
 				MockMvcRequestBuilders.post("/field-conditions")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -66,6 +73,28 @@ public class StreamingStatisticsApplicationTest {
 				.andExpect(status().isCreated());
 	}
 
+	@Test
+	public void shouldRecordStream() throws Exception {
+
+
+		Random r = new Random();
+		for( int i = 0 ; i <  1000 ; i ++   ){
+
+		String value = String.valueOf((int) ((Math.random() * 900) + 100) / 100.0);
+
+		String field_Data =
+			"{"
+					+ "	\"vegetation\" : " + value + ","
+					+ "	\"occurrenceAt\" : \"2019-04-23T08:50Z\""
+					+ "}";
+		logger.debug( "Field value is {} " + field_Data );
+		mvc.perform(
+				MockMvcRequestBuilders.post("/field-conditions")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(field_Data))
+				.andExpect(status().isCreated());
+		}
+	}
 	@Test
 	public void shouldNotRecord() throws Exception {
 		mvc.perform(
