@@ -1,6 +1,7 @@
 package com.application;
 
 import com.field.controller.FieldController;
+import com.field.controller.TelemetrySummaryException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +17,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -87,7 +87,7 @@ public class StreamingStatisticsApplicationTest {
 					+ "	\"vegetation\" : " + value + ","
 					+ "	\"occurrenceAt\" : \"2019-04-23T08:50Z\""
 					+ "}";
-		logger.debug( "Field value is {} " + field_Data );
+		logger.debug( "Field value is {} " , field_Data );
 		mvc.perform(
 				MockMvcRequestBuilders.post("/field-conditions")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -109,6 +109,19 @@ public class StreamingStatisticsApplicationTest {
 		mvc.perform(
 				MockMvcRequestBuilders.get("/field-statistics"))
 				.andExpect(status().isOk());
+	}
+
+	@Test(expected = Exception.class)
+	public void shouldNotRecordDueToException() throws Exception {
+		String field_Data =
+				"{"
+						+ "	\"vegetation\" : \"0.82\","
+						+ "	\"occurrenceAt\" : \"2019-04-23T08:50\""
+						+ "}";
+		mvc.perform(
+				MockMvcRequestBuilders.post("/field-conditions")
+						.contentType(MediaType.APPLICATION_JSON)
+						.content(field_Data));
 	}
 
 
