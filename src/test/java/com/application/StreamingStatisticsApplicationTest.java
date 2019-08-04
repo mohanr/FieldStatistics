@@ -87,7 +87,7 @@ public class StreamingStatisticsApplicationTest {
 					+ "	\"vegetation\" : " + value + ","
 					+ "	\"occurrenceAt\" : \"2019-04-23T08:50Z\""
 					+ "}";
-		logger.debug( "Field value is {} " , field_Data );
+		//logger.debug( "Field value is {} " , field_Data );
 		mvc.perform(
 				MockMvcRequestBuilders.post("/field-conditions")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -104,12 +104,6 @@ public class StreamingStatisticsApplicationTest {
 				.andExpect(status().isBadRequest());
 	}
 
-	@Test
-	public void shouldSummarize() throws Exception {
-		mvc.perform(
-				MockMvcRequestBuilders.get("/field-statistics"))
-				.andExpect(status().isOk());
-	}
 
 	@Test(expected = Exception.class)
 	public void shouldNotRecordDueToException() throws Exception {

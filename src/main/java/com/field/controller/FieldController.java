@@ -23,14 +23,17 @@ import java.util.Locale;
 @RestController
 public class FieldController {
 
-    FieldStatistics fieldStatistics = new FieldStatistics();
 
     //Refactor to a separate class
     static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm'Z'", Locale.ENGLISH);
 
+    FieldStatistics fieldStatistics = new FieldStatistics();
+
     Logger logger = LoggerFactory.getLogger("com.statistics");
     @PostMapping("/field-conditions")
 	public ResponseEntity<?> record(@Valid @RequestBody Telemetry telemetry,  Errors errors) {
+
+
         if (errors.hasErrors()) {
             return new ResponseEntity<>(errors.getAllErrors(), HttpStatus.BAD_REQUEST);
         }

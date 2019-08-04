@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <appender name="Console" class="ch.qos.logback.core.FileAppender">
+    <appender name="file" class="ch.qos.logback.core.FileAppender">
         <file>C:/FieldStatistics/statistics.log</file>
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
@@ -10,11 +10,15 @@
     </appender>
 
     <root level="info">
-        <appender-ref ref="Console" />
+        <appender-ref ref="file" />
     </root>
 
     <!-- Log everything at the TRACE level -->
     <logger name="com.statistics" level="debug" additivity="false">
-        <appender-ref ref="Console" />
+        <appender-ref ref="file" />
+    </logger>
+    <!-- Log everything at the TRACE level -->
+    <logger name="com.statistics.test" level="debug" additivity="false">
+        <appender-ref ref="file" />
     </logger>
 </configuration>
