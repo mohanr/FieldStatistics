@@ -21,7 +21,7 @@ public class FieldStatistics {
 
 	 private Logger logger = LoggerFactory.getLogger("com.statistics");
 
-	 DoubleHistogram  histogram = new DoubleHistogram ( 3);
+	 DoubleHistogram  histogram;
 
 	/**
 	 * Record in Histogram if the timestamps are within a period of 30 days.
@@ -34,6 +34,7 @@ public class FieldStatistics {
 	public  void record( double value, long timeStamp ) {
 
 
+		reset(  timeStamp );
 		histogram.recordValue(value);
 
 	}
@@ -42,18 +43,33 @@ public class FieldStatistics {
 		histogramMap.computeIfAbsent(timeStamp, k -> store( k ) );
 		for (Map.Entry<Long, DoubleHistogram> entry : histogramMap.entrySet()) {
 			Long key = entry.getKey();
-			LocalDateTime newDate =
-					LocalDateTime.ofInstant(Instant.ofEpochMilli(key), ZoneId.of("UTC"));
-			LocalDateTime oldDate =
-					LocalDateTime.ofInstant(Instant.ofEpochMilli(timeStamp), ZoneId.of("UTC"));
-			long different = ChronoUnit.DAYS.between(newDate, oldDate);
-			//logger.info("Difference between dates is {}", different );
+			long difference = reconstructDateTime(key).until( reconstructDateTime(timeStamp), ChronoUnit.DAYS);
+			if( difference > 30 ){
+				logger.info("Difference between dates is {}", difference );
+				histogramMap.remove( key);
+				histogramMap.computeIfAbsent(timeStamp, k -> store( k ) );
+			}
 		}
 	}
 
+	 /**
+	  * Reconstruct LocalDateTime to check the difference. There may be a direct way
+	  * to do this.
+	  * TODO The difference should be 30 days and 1 second ( if that is the precision )
+	  * TODO so that we are sure that we aggregate for 30 days exactly.
+	  * @param timeStamp
+	  * @return reconstructed LocalDateTimeDateTime
+	  */
+	 private LocalDateTime reconstructDateTime( long timeStamp ){
+
+		 LocalDateTime reconstructedDateTime =
+				 LocalDateTime.ofInstant(Instant.ofEpochMilli(  timeStamp),
+						 ZoneId.of("UTC"));
+		 return reconstructedDateTime;
+	 }
+
 	private DoubleHistogram store( long timeStamp ){
-		logger.info("histogram.reset()" );
-		//histogram.reset();
+		histogram =  new DoubleHistogram ( 3);
 		return histogram;
 	}
 
