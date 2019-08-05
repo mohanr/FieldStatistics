@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -37,8 +40,11 @@ public class FieldController {
         if (errors.hasErrors()) {
             return new ResponseEntity<>(errors.getAllErrors(), HttpStatus.BAD_REQUEST);
         }
-        LocalDate date = LocalDate.parse(telemetry.getTimeStamp(), dateTimeFormatter);
-        fieldStatistics.record( new Float( telemetry.getValue()).longValue(), date.toEpochDay() );
+        LocalDateTime oldDateTime = LocalDateTime.parse(telemetry.getTimeStamp(), dateTimeFormatter);
+        ZonedDateTime ozdt = oldDateTime.atZone(ZoneId.of("UTC"));
+        
+        fieldStatistics.record( new Float( telemetry.getValue()).longValue(),
+                                           ozdt.toInstant().toEpochMilli() );
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
