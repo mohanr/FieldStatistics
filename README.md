@@ -25,4 +25,19 @@ do not `assert` the result. This is again pending now.
 `com.unit.StatisticsPeriodTest` has tests that exercise the _DoubleHistograms_. This is crucial as the foundation
 is tested to prove that we get back the aggregated values we need.
 
+# Concurrency
+
+Here I list some concurrency mechanisms used by _HdrHistogram_. A more advanced description is  
+
+1. Writers do not block. Writers record observed values.
+2. Readers only block for other readers. Readers work with a stable copy of the underlying data for data analysis.
+
+Further exploration of the [concurrency](ttp://hdrhistogram.github.io/HdrHistogram/JavaDoc/index.html?org/HdrHistogram/Histogram.html) is planned.
+
+The other concurrency feature the code uses is a _java.util.concurrent.ConcurrentHashMap_ to store a _Histogram_
+datastructure associated with a _timestamp_. When a new _Timestamp_ is received so that difference between the
+stored _timestamp_ and the new one is more than 30 days, the old _Histogram_ is removed from the Map and the new
+one stored. We wait till 30 days pass and repeat the same procedure.
+
+
 
