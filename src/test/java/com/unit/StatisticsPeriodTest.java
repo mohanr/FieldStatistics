@@ -76,14 +76,12 @@ public class StatisticsPeriodTest {
 
 	  /** Reconstruct LocalDateTime to check the difference. There may be a direct way
 	  * to do this.
-      * TODO The difference should be 30 days and 1 second ( if that is the precision )
-	  * TODO so that we are sure that we aggregate for 30 days exactly.
        */
     @Test
     public void dateDifference(){
 
         LocalDateTime oldDate = LocalDateTime.parse("2019-04-23T08:50Z", dateTimeFormatter);
-        LocalDateTime newDate = oldDate.plusDays(31);
+        LocalDateTime newDate = oldDate.plusDays(30);
 
         LocalDateTime oldDateTime =
                 LocalDateTime.ofInstant(oldDate.atZone(ZoneId.of("UTC")).toInstant(),ZoneId.of("UTC") );
@@ -103,7 +101,7 @@ public class StatisticsPeriodTest {
 
         long difference = oldDateTime.until( newDateTime, ChronoUnit.DAYS);
         System.out.println( difference );
-        assertTrue( "Difference in days is greater than 30", difference > 30 );
+        assertTrue( "Difference in days is greater than 30", difference == 30 );
     }
 
     @Test
@@ -125,7 +123,7 @@ public class StatisticsPeriodTest {
         assertEquals(0.12, oldValues[0], 0.01);
         assertEquals(0.82, oldValues[1], 0.01);
 
-        LocalDateTime newDateTime = oldDateTime.plusDays(31);
+        LocalDateTime newDateTime = oldDateTime.plusDays(30);
         ZonedDateTime nzdt = newDateTime.atZone(ZoneId.of("UTC"));
         long newTimeStamp = nzdt.toInstant().toEpochMilli();
 

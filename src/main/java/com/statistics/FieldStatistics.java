@@ -44,7 +44,7 @@ public class FieldStatistics {
 		for (Map.Entry<Long, DoubleHistogram> entry : histogramMap.entrySet()) {
 			Long key = entry.getKey();
 			long difference = reconstructDateTime(key).until( reconstructDateTime(timeStamp), ChronoUnit.DAYS);
-			if( difference > 30 ){
+			if( difference == 30 ){
 				logger.info("Difference between dates is {}", difference );
 				histogramMap.remove( key);
 				histogramMap.computeIfAbsent(timeStamp, k -> store( k ) );
@@ -55,8 +55,6 @@ public class FieldStatistics {
 	 /**
 	  * Reconstruct LocalDateTime to check the difference. There may be a direct way
 	  * to do this.
-	  * TODO The difference should be 30 days and 1 second ( if that is the precision )
-	  * TODO so that we are sure that we aggregate for 30 days exactly.
 	  * @param timeStamp
 	  * @return reconstructed LocalDateTimeDateTime
 	  */
