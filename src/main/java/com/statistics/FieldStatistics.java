@@ -1,5 +1,6 @@
 package com.statistics;
 
+import org.HdrHistogram.ConcurrentDoubleHistogram;
 import org.HdrHistogram.DoubleHistogram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ public class FieldStatistics {
 
 	 private Logger logger = LoggerFactory.getLogger("com.statistics");
 
-	 DoubleHistogram  histogram;
+	 ConcurrentDoubleHistogram histogram;
 
 	/**
 	 * Record in Histogram if the timestamps are within a period of 30 days.
@@ -66,8 +67,8 @@ public class FieldStatistics {
 		 return reconstructedDateTime;
 	 }
 
-	private DoubleHistogram store( long timeStamp ){
-		histogram =  new DoubleHistogram ( 3);
+	private ConcurrentDoubleHistogram store( long timeStamp ){
+		histogram =  new ConcurrentDoubleHistogram ( 3);
 		return histogram;
 	}
 
