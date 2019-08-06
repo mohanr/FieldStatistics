@@ -27,12 +27,13 @@ is tested to prove that we get back the aggregated values we need.
 
 # Concurrency
 
-Here I list some concurrency mechanisms used by _HdrHistogram_. A more advanced description is  
+Here I list some concurrency mechanisms used by _HdrHistogram_.  
 
 1. Writers do not block. Writers record observed values.
 2. Readers only block for other readers. Readers work with a stable copy of the underlying data for data analysis.
 
-Further exploration of  [concurrency](http://hdrhistogram.github.io/HdrHistogram/JavaDoc/index.html?org/HdrHistogram/Histogram.html) is planned.
+Further exploration of concurrency is planned as this is a hard subject but for our purposes _ConcurrentDoubleHistogram_
+should work. But recorded data will change while Queries are being processed.
 
 The other concurrency feature the code uses is a _java.util.concurrent.ConcurrentHashMap_ to store a _Histogram_
 datastructure associated with a _timestamp_. When a new _Timestamp_ is received so that difference between the
