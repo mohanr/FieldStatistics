@@ -1,6 +1,7 @@
 package com.unit;
 
 import com.statistics.FieldStatistics;
+import org.HdrHistogram.ConcurrentDoubleHistogram;
 import org.HdrHistogram.DoubleHistogram;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class StatisticsPeriodTest {
      */
     @Test
     public void histogramBasic1() {
-        DoubleHistogram histo = new DoubleHistogram(3);
+        ConcurrentDoubleHistogram histo = new ConcurrentDoubleHistogram(3);
         histo.recordValue(0.82);
         histo.recordValue(0.55);
         histo.recordValue(0.63);
