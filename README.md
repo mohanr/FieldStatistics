@@ -46,7 +46,7 @@ This part is as yet unexplored.
 1. Storage of timestamps and values can utilize either a timeseries database or file formats like Avro or Parquet.
 
 2. Similarly _HdrHistograms_ can be stored in a timeseries database too. This datastructure aggregates values and
-calculates percentiles already. So storing multiplee _HdrHistograms_ for various periods in such a DB and
-aggregating the _HdrHistograms_ when needed will be a powerful data analysis technique.
+calculates percentiles already. So  multiple _HdrHistograms_ for various periods can be stored in such a DB or even in memory.
+These  _HdrHistograms_ can in turn be aggregated when needed. This will be a powerful data analysis technique.
 
 
